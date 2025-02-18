@@ -1,0 +1,24 @@
+name: Export Spotify Data
+
+on:
+  schedule:
+    - cron: "0 12 * * *"  # Exécute tous les jours à midi UTC
+  workflow_dispatch:  # Permet un déclenchement manuel
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install spotipy python-dotenv
+
+      - name: Run script
+        run: python main.py
