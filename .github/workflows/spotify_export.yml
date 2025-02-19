@@ -2,8 +2,8 @@ name: Export Spotify Data
 
 on:
   schedule:
-    - cron: '30 18 * * 5'  # Tous les vendredis à 19h30 UTC+1
-  workflow_dispatch:  # Permet d'exécuter manuellement
+    - cron: '30 18 * * 5'  # Exécution tous les vendredis à 19h30 (UTC+1)
+  workflow_dispatch:  # Permet de l'exécuter manuellement
 
 jobs:
   export:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Cloner le dépôt
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Installer Python
         uses: actions/setup-python@v4
@@ -19,7 +19,7 @@ jobs:
           python-version: '3.9'
 
       - name: Installer les dépendances
-        run: pip install spotipy
+        run: pip install spotipy python-dotenv
 
       - name: Exécuter le script
         env:
@@ -29,7 +29,7 @@ jobs:
         run: python spotify_export.py
 
       - name: Sauvegarder les résultats
-  uses: actions/upload-artifact@v4
-  with:
-    name: spotify_data
-    path: spotify_data.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: spotify_data
+          path: spotify_data.json
