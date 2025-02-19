@@ -12,20 +12,23 @@ SPOTIPY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI")
 
 print("🔑 Identification en cours...")
 
-# Authentification
+# Créer un dossier de cache pour stocker le token
+CACHE_PATH = ".cache"
+
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
     client_id=SPOTIPY_CLIENT_ID,
     client_secret=SPOTIPY_CLIENT_SECRET,
     redirect_uri=SPOTIPY_REDIRECT_URI,
     scope="user-library-read",
-    open_browser=False
+    open_browser=False,
+    cache_path=CACHE_PATH  # Permet de réutiliser le token
 ))
 
 print("🎵 Récupération des titres likés...")
 
 # Récupérer les titres likés
 liked_tracks = []
-results = sp.current_user_saved_tracks()
+results = sp.current_user_saved_tracks(limit=50)
 while results:
     for item in results['items']:
         track = item['track']
@@ -41,7 +44,7 @@ print("💿 Récupération des albums enregistrés...")
 
 # Récupérer les albums enregistrés
 saved_albums = []
-results = sp.current_user_saved_albums()
+results = sp.current_user_saved_albums(limit=50)
 while results:
     for item in results['items']:
         album = item['album']
