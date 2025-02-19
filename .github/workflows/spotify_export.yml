@@ -36,7 +36,7 @@ jobs:
         run: python spotify_export.py
 
       - name: Sauvegarder le fichier exporté
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: spotify_liked_tracks
           path: spotify_liked_tracks.csv
