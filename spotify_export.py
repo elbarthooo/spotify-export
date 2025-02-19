@@ -17,7 +17,8 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
     client_id=SPOTIPY_CLIENT_ID,
     client_secret=SPOTIPY_CLIENT_SECRET,
     redirect_uri=SPOTIPY_REDIRECT_URI,
-    scope="user-library-read"
+    scope="user-library-read",
+    open_browser=False
 ))
 
 print("🎵 Récupération des titres likés...")
