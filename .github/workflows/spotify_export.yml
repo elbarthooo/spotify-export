@@ -1,38 +1,42 @@
 name: Export Spotify Liked Tracks
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'  # Exécute tous les jours à minuit UTC
-  workflow_dispatch:  # Permet de lancer manuellement
+    - cron: '0 2 * * *'  # Exécute tous les jours à 2h du matin
 
 jobs:
   export:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🛠️ Cloner le dépôt
+      - name: Cloner le dépôt
         uses: actions/checkout@v4
 
-      - name: 🐍 Installer Python
+      - name: Installer Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.9'
 
-      - name: 📦 Installer les dépendances
-        run: pip install spotipy python-dotenv pandas
+      - name: Installer les dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: 🔑 Configurer les variables d'environnement
-        env:
-          SPOTIPY_CLIENT_ID: ${{ secrets.SPOTIPY_CLIENT_ID }}
-          SPOTIPY_CLIENT_SECRET: ${{ secrets.SPOTIPY_CLIENT_SECRET }}
-          SPOTIPY_REDIRECT_URI: ${{ secrets.SPOTIPY_REDIRECT_URI }}
-        run: echo "Secrets chargés avec succès"
+      - name: Configurer les variables d’environnement
+        run: |
+          echo "SPOTIPY_CLIENT_ID=${{ secrets.SPOTIPY_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "SPOTIPY_CLIENT_SECRET=${{ secrets.SPOTIPY_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "SPOTIPY_REDIRECT_URI=${{ secrets.SPOTIPY_REDIRECT_URI }}" >> $GITHUB_ENV
 
-      - name: 🚀 Exécuter le script
+      - name: Vérifier les variables d’environnement
+        run: env | grep SPOTIPY
+
+      - name: Exécuter le script
         run: python spotify_export.py
 
-      - name: 📤 Sauvegarder le fichier exporté
-        uses: actions/upload-artifact@v4
+      - name: Sauvegarder le fichier exporté
+        uses: actions/upload-artifact@v3
         with:
           name: spotify_liked_tracks
           path: spotify_liked_tracks.csv
